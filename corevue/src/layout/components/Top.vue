@@ -1,6 +1,6 @@
 <template>
     <div class="iq-top-navbar">
-            <div class="iq-navbar-custom">
+            <div class="iq-navbar-custom" style="max-width:2000px; margin:0 auto;">
                <div class="iq-sidebar-logo">
                   <div class="top-logo">
                      <a href="index.html" class="logo">
@@ -10,22 +10,12 @@
                <div class="iq-dark-logo">
                   <img src="../../assets/images/logo-dark.gif" class="img-fluid" alt="">
                </div>
-                     <span>vito</span>
                      </a>
                   </div>
                </div>
                <nav class="navbar navbar-expand-lg navbar-light p-0">
                   <div class="navbar-left">
-                     <ul id="topbar-data-icon" class="d-flex p-0 topbar-menu-icon">
-                        <li class="nav-item">
-                           <a href="index.html" class="nav-link font-weight-bold search-box-toggle"><i class="ri-home-4-line"></i></a>
-                        </li>
-                        <li><a href="chat.html" class="nav-link"><i class="ri-message-line"></i></a></li>
-                        <li><a href="e-commerce-product-list.html" class="nav-link"><i class="ri-file-list-line"></i></a></li>
-                        <li><a href="profile.html" class="nav-link"><i class="ri-question-answer-line"></i></a></li>
-                        <li><a href="todo.html" class="nav-link router-link-exact-active router-link-active"><i class="ri-chat-check-line"></i></a></li>
-                        <li><a href="app/index.html" class="nav-link"><i class="ri-inbox-line"></i></a></li>
-                     </ul>
+                    
                      <div class="iq-search-bar d-none d-md-block">
                         <form action="#" class="searchbox">
                            <input type="text" class="text search-input" placeholder="Type here to search...">
@@ -125,8 +115,8 @@
                                        </div>
                                     </div>
                                  </a>
-                                 <div class="d-inline-block w-100 text-center p-3">
-                                    <a class="btn btn-primary dark-btn-primary" href="sign-in.html" role="button">Sign out<i class="ri-login-box-line ml-2"></i></a>
+                                    <div class="d-inline-block w-100 text-center p-3">
+                                    <router-link class="btn btn-primary dark-btn-primary" to="/dang-nhap" role="button">Sign out<i class="ri-login-box-line ml-2"></i></router-link>
                                  </div>
                               </div>
                            </div>

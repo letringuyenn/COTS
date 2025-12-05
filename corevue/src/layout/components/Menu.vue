@@ -23,10 +23,16 @@
                <nav class="iq-sidebar-menu">
                   <ul id="iq-sidebar-toggle" class="iq-menu">
                      <li>
-                        <a href="index.html" class="iq-waves-effect"><i class="ri-home-4-line"></i><span>Dashboard 1</span></a>
+                        <router-link to="/dashboard" class="iq-waves-effect"><i class="ri-home-4-line"></i><span>Dashboard</span></router-link>
+                     </li>
+                        <li>
+                        <router-link to="/project" class="iq-waves-effect"><i class="fa-regular fa-folder-closed"></i><span>Project</span></router-link>
+                     </li>
+                      <li>
+                        <a href="index.html" class="iq-waves-effect"><i class="fa-solid fa-users"></i><span>Team</span></a>
                      </li>
                      <li>
-                        <a href="#menu-design" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="ri-menu-3-line"></i><span>Menu Design</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
+                        <a href="#menu-design" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i class="ri-menu-3-line"></i><span>My Tasks</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
                         <ul id="menu-design" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
                            <li><a href="horizontal-menu.html"><i class="ri-git-commit-line"></i>Horizontal menu</a></li>
                            <li><a href="horizontal-top-menu.html"><i class="ri-text-spacing"></i>Horizontal Top Menu</a></li>
