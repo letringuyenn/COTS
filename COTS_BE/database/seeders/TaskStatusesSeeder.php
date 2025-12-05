@@ -2,48 +2,41 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class TaskStatusesSeeder extends Seeder
 {
-    /**
-     * Chạy seeder.
-     */
     public function run(): void
     {
-        DB::table('task_statuses')->insert([
+        $taskStatuses = [
             [
-                'name' => 'Mới tạo',
-                'description' => 'Task vừa được tạo và chưa xử lý',
-                'created_at' => now(),
-                'updated_at' => now(),
+                'name' => 'todo',
+                'description' => 'Cần làm',
             ],
             [
-                'name' => 'Đang thực hiện',
-                'description' => 'Task đang được xử lý bởi nhân viên',
-                'created_at' => now(),
-                'updated_at' => now(),
+                'name' => 'in_progress',
+                'description' => 'Đang làm',
             ],
             [
-                'name' => 'Tạm dừng',
-                'description' => 'Task tạm thời bị hoãn lại',
-                'created_at' => now(),
-                'updated_at' => now(),
+                'name' => 'testing',
+                'description' => 'Đang kiểm thử',
             ],
             [
-                'name' => 'Hoàn thành',
-                'description' => 'Task đã xử lý xong',
-                'created_at' => now(),
-                'updated_at' => now(),
+                'name' => 'done',
+                'description' => 'Đã hoàn thành',
             ],
             [
-                'name' => 'Đã hủy',
-                'description' => 'Task bị hủy bỏ',
-                'created_at' => now(),
-                'updated_at' => now(),
+                'name' => 'approved',
+                'description' => 'Đã duyệt',
             ],
-        ]);
+        ];
+
+        // Xóa dữ liệu cũ trước khi thêm mới
+        DB::table('task_statuses')->delete();
+
+        // Thêm dữ liệu mới
+        DB::table('task_statuses')->insert($taskStatuses);
     }
 }
