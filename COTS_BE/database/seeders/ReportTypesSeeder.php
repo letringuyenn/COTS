@@ -2,35 +2,38 @@
 
 namespace Database\Seeders;
 
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class ReportTypesSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        DB::table('report_types')->insert([
+        $reportTypes = [
             [
-                'name' => 'Sprint Report',
-                'description' => 'Tổng hợp kết quả Sprint: user story hoàn thành, burndown chart, velocity.',
-                'created_at' => now(),
-                'updated_at' => now(),
+                'name' => 'sprint_report',
+                'description' => 'Báo cáo Sprint',
             ],
             [
-                'name' => 'Burndown Chart',
-                'description' => 'Biểu đồ burndown theo dõi tiến độ trong Sprint.',
-                'created_at' => now(),
-                'updated_at' => now(),
+                'name' => 'task_report',
+                'description' => 'Báo cáo Task',
             ],
             [
-                'name' => 'Velocity Report',
-                'description' => 'Báo cáo tổng số story point hoàn thành trong các Sprint.',
-                'created_at' => now(),
-                'updated_at' => now(),
+                'name' => 'progress_report',
+                'description' => 'Báo cáo tiến độ',
             ],
-        ]);
+            [
+                'name' => 'timesheet',
+                'description' => 'Bảng chấm công',
+            ],
+        ];
+
+        // Xóa dữ liệu cũ trước khi thêm mới
+        DB::table('report_types')->truncate();
+        DB::table('report_types')->delete();
+
+        // Thêm dữ liệu mới
+        DB::table('report_types')->insert($reportTypes);
     }
 }
