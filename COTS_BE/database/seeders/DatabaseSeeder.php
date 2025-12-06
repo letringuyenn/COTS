@@ -2,57 +2,38 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
+use Illuminate\Console\View\Components\Task;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Foundation\Auth\User;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
     /**
-     * Seed the application's database.
+     * Run the database seeds.
      */
     public function run(): void
     {
         $this->call([
-            // 1. Hệ thống cơ bản
-            SystemRolesSeeder::class,
             UserStatusesSeeder::class,
+            SystemRolesSeeder::class,
+            WorkspaceRolesSeeder::class,
+            BoardStatusesSeeder::class,
             TaskStatusesSeeder::class,
-            StoryStatusesSeeder::class,
             PrioritiesSeeder::class,
+            BoardTypesSeeder::class,
+            DocumentTypesSeeder::class,
             ReportTypesSeeder::class,
 
-            // 2. Người dùng & phân quyền
-            UsersScrumSeeder::class,
-
-            // 3. Workspace setup
+            UsersSeeder::class,
+            PasswordResetTokensSeeder::class,
             WorkspacesSeeder::class,
-            WorkspaceRolesSeeder::class,
             WorkspaceMembersSeeder::class,
 
-            // 4. Dự án & quy trình Agile
-            ProjectsSeeder::class,
-            SprintsSeeder::class,
-            UserStoriesSeeder::class,
-
-            // 5. Tasks & liên kết liên quan
+            BoardsSeeder::class,
             TasksSeeder::class,
             TaskAssigneesSeeder::class,
-            TaskDocumentsSeeder::class,
-
-            // 6. Checklist
-            ChecklistsSeeder::class,
-            ChecklistItemsSeeder::class,
-
-            // 7. Tài liệu (Documents)
-            DocumentTypesSeeder::class,
-            DocumentCategoriesSeeder::class,
-            DocumentsSeeder::class,
-
-            // 8. Log cuối
-            DailyLogsSeeder::class,
+            DailyProgressSeeder::class,
         ]);
     }
 }

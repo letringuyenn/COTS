@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -9,25 +10,38 @@ class DocumentTypesSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::table('document_types')->insert([
+        $documentTypes = [
             [
-                'name' => 'Hướng dẫn',
-                'description' => 'Các tài liệu hướng dẫn sử dụng',
-                'created_at' => now(),
-                'updated_at' => now(),
+                'name' => 'requirement',
+                'description' => 'Yêu cầu',
             ],
             [
-                'name' => 'Báo cáo',
-                'description' => 'Báo cáo tiến độ dự án hoặc sprint',
-                'created_at' => now(),
-                'updated_at' => now(),
+                'name' => 'design',
+                'description' => 'Thiết kế',
             ],
             [
-                'name' => 'Template',
-                'description' => 'Các mẫu biểu, template dùng trong dự án',
-                'created_at' => now(),
-                'updated_at' => now(),
+                'name' => 'technical',
+                'description' => 'Kỹ thuật',
             ],
-        ]);
+            [
+                'name' => 'testing',
+                'description' => 'Kiểm thử',
+            ],
+            [
+                'name' => 'guide',
+                'description' => 'Hướng dẫn',
+            ],
+            [
+                'name' => 'meeting_note',
+                'description' => 'Ghi chú họp',
+            ],
+        ];
+
+        // Xóa dữ liệu cũ trước khi thêm mới
+        DB::table('document_types')->truncate();
+        DB::table('document_types')->delete();
+
+        // Thêm dữ liệu mới
+        DB::table('document_types')->insert($documentTypes);
     }
 }

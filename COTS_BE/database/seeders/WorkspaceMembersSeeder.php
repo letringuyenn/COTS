@@ -2,35 +2,34 @@
 
 namespace Database\Seeders;
 
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class WorkspaceMembersSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        DB::table('workspace_members')->insert([
+        $workspaceMembers = [
             [
-                'user_id' => 1, //Owner
-                'workspace_id' => 1,
-                'role_id' => 1,
+                'workspace_id' => 1, // Giả sử workspace mặc định có id = 1
+                'user_id' => 1,      // Giả sử admin có id = 1
+                'role_id' => 1,      // owner
                 'joined_at' => now(),
             ],
             [
-                'user_id' => 2, //Admin
                 'workspace_id' => 1,
-                'role_id' => 2,
+                'user_id' => 2,      // Giả sử member có id = 2
+                'role_id' => 3,      // member
                 'joined_at' => now(),
             ],
-            [
-                'user_id' => 3, //Member
-                'workspace_id' => 1,
-                'role_id' => 3,
-                'joined_at' => now(),
-            ],
-        ]);
+        ];
+
+        // Xóa dữ liệu cũ trước khi thêm mới
+        DB::table('workspace_members')->truncate();
+        DB::table('workspace_members')->delete();
+
+        // Thêm dữ liệu mới
+        DB::table('workspace_members')->insert($workspaceMembers);
     }
 }
