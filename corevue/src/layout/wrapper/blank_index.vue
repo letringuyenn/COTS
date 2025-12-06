@@ -1,22 +1,17 @@
 <template>
-  <div id="loading">
-    <div id="loading-center"></div>
-  </div>
-  <div class="wrapper">
-    <Menu></Menu>
-    <Top></Top>
-    <div id="content-page" class="content-page">
-      <div class="container-fluid">
-        <router-view></router-view>
-      </div>
+    <div id="loading">
+        <div id="loading-center">
+        </div>
     </div>
-  </div>
-  <Bot></Bot>
+    <div class="wrapper">
+        <div id="content-page" class="content-page">
+            <div class="container-fluid">
+                <router-view></router-view>
+            </div>
+        </div>
+    </div>
 </template>
 <script>
-import Top from "../components/Top.vue";
-import Menu from "../components/Menu.vue";
-import Bot from "../components/Bot.vue";
 import "../../assets/js/jquery.min.js";
 import "../../assets/js/rtl.js";
 import "../../assets/js/customizer.js";
@@ -44,13 +39,10 @@ import "../../assets/js/chartist/chartist.min.js";
 import "../../assets/js/chart-custom.js";
 import "../../assets/js/custom.js";
 export default {
-  name: "Wrapper",
-  components: {
-    Top,
-    Menu,
-    Bot,
-  },
-};
+    name: 'Wrapper',
+    components: {
+    },
+}
 </script>
 <style>
 @import "../../assets/css/bootstrap.min.css";

@@ -3,11 +3,27 @@ import { createRouter, createWebHistory } from "vue-router"; // cài vue-router:
 const routes = [
   {
     path: "/",
-    component: () => import("../components/Test/index.vue"),
+    component: () => import("../components/Client/Dashboard/index.vue"),
+  },
+  {
+    path: "/dashboard",
+    component: () => import("../components/Client/Dashboard/index.vue"),
+    meta: { layout: "default" },
+  },
+  {
+    path: "/project",
+    component: () => import("../components/Client/Project/index.vue"),
+    meta: { layout: "default" },
+  },
+  {
+    path: "/dang-nhap",
+    component: () => import("../components/DangNhap/index.vue"),
+    meta: { layout: "blank-layout" },
   },
   {
     path: "/teamanager",
     component: () => import("../components/Client/Teamanager/index.vue"),
+    meta: { layout: "default" },
   },
 ];
 
