@@ -33,29 +33,17 @@
                     <a class="text-primary small" href="#" style="text-decoration:none;">Quên mật khẩu?</a>
                 </div>
 
-                <button @click="fakeLogin" class="btn btn-primary w-100 mt-3 login-btn">
+                <button @click="Login" class="btn btn-primary w-100 mt-3 login-btn">
                     Đăng Nhập
                 </button>
-
-                <!-- OR -->
-                <div class="text-center mt-4 mb-2">
-                    <div class="d-flex align-items-center text-muted">
-                        <hr class="flex-grow-1">
-                        <span class="mx-2">Hoặc</span>
-                        <hr class="flex-grow-1">
-                    </div>
-                </div>
-
-                <button class="btn btn-outline-dark w-100 google-btn">
-                    <i class="fa-brands fa-google"></i> &nbsp; Đăng Nhập Với Google
-                </button>
-
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
     data() {
         return {
@@ -69,8 +57,11 @@ export default {
             }
         };
     },
+    mounted() {
+        this.kiemTraDangNhap();
+    },
     methods: {
-        fakeLogin() {
+        Login() {
             this.errors.email = "";
             this.errors.password = "";
 
@@ -78,7 +69,50 @@ export default {
             if (!this.user.password) this.errors.password = "Vui lòng nhập mật khẩu.";
 
             if (this.errors.email || this.errors.password) return;
-            alert("Đăng nhập thành công (FE demo).");
+
+            axios
+                .post("http://127.0.0.1:8000/api/khach-hang/dang-nhap", this.user)
+                .then((res) => {
+                    if (res.data.status) {
+                        localStorage.setItem("token_client", res.data.token);
+                        localStorage.setItem("user_name", res.data.name);
+                        localStorage.setItem("user_id", res.data.user_id);
+                        this.$toast?.success(res.data.message);
+                        this.$router.push("/").then(() => location.reload());
+                    } else {
+                        this.$toast?.error(res.data.message);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error.response || error);
+                    const list = Object.values(error.response?.data?.errors || { error: ['Đã xảy ra lỗi không xác định'] });
+                    list.forEach((v) => this.$toast?.error(v[0]));
+                });
+        },
+
+        kiemTraDangNhap() {
+            const token = localStorage.getItem("token_client");
+            if (!token) return;
+            axios
+                .get("http://127.0.0.1:8000/api/khach-hang/check-token", {
+                    headers: {
+                        Authorization: "Bearer " + token
+                    }
+                })
+                .then((res) => {
+                    if (res.data.status) {
+                        localStorage.setItem("user_name", res.data.name);
+                        localStorage.setItem("user_email", res.data.email);
+                        localStorage.setItem("system_role_id", res.data.system_role_id);
+                        localStorage.setItem("status_id", res.data.status_id);
+                        this.$router.push("/");
+                    } else {
+                        this.$toast?.error(res.data.message);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err.response || err);
+                });
         }
     }
 };

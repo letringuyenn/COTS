@@ -20,6 +20,11 @@ const routes = [
     component: () => import("../components/DangNhap/index.vue"),
     meta: { layout: "blank-layout" },
   },
+  {
+    path: "/teamanager",
+    component: () => import("../components/Client/Teamanager/index.vue"),
+    meta: { layout: "default" },
+  },
 ];
 
 const router = createRouter({
