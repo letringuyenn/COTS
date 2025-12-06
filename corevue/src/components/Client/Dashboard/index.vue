@@ -1,29 +1,22 @@
 <template>
     <div class="container py-4">
-
-        <!-- Welcome -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h2 class="fw-bold">Welcome back, Viet Nguyen Quoc</h2>
                 <p class="text-muted">Here's what's happening with your projects today</p>
             </div>
 
-            <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#newProjectModal">
+            <button class="btn btn-primary btn-lg" @click="showCreateModal" data-toggle="modal" data-target="#newProjectModal">
                 <i class="bi bi-plus-lg"></i> New Project
             </button>
         </div>
-
-        <!-- Stats -->
         <div class="row g-3 mb-4">
-
-            <!-- Total Projects -->
             <div class="col-md-3">
                 <div class="card p-3 shadow-sm border-0">
                     <span class="fw-semibold d-block">Total Projects</span>
                     <div class="d-flex justify-content-between">
-
                         <div>
-                            <h4 class="fw-bold">0</h4>
+                            <h4 class="fw-bold">{{ workspaces.length }}</h4>
                             <small class="text-muted">projects in Viet Nguyen Quoc</small>
                         </div>
                         <div class="icon bg-light rounded p-3">
@@ -32,16 +25,13 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Completed Projects -->
             <div class="col-md-3">
                 <div class="card p-3 shadow-sm border-0">
                     <span class="fw-semibold d-block">Completed Projects</span>
                     <div class="d-flex justify-content-between">
-
                         <div>
-                            <h4 class="fw-bold">0</h4>
-                            <small class="text-muted">of 0 total</small>
+                            <h4 class="fw-bold">{{ completedProjects }}</h4>
+                            <small class="text-muted">of {{ workspaces.length }} total</small>
                         </div>
                         <div class="icon bg-light rounded p-3">
                             <i class="bi bi-check2-circle fs-3 text-success fa-xl"></i>
@@ -49,15 +39,12 @@
                     </div>
                 </div>
             </div>
-
-            <!-- My Tasks -->
             <div class="col-md-3">
                 <div class="card p-3 shadow-sm border-0">
                     <span class="fw-semibold d-block">My Tasks</span>
                     <div class="d-flex justify-content-between">
-
                         <div>
-                            <h4 class="fw-bold">0</h4>
+                            <h4 class="fw-bold">{{ myTasks. length }}</h4>
                             <small class="text-muted">assigned to me</small>
                         </div>
                         <div class="icon bg-light rounded p-3">
@@ -66,15 +53,12 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Overdue -->
             <div class="col-md-3">
                 <div class="card p-3 shadow-sm border-0">
                     <span class="fw-semibold d-block">Overdue</span>
                     <div class="d-flex justify-content-between">
-
                         <div>
-                            <h4 class="fw-bold">0</h4>
+                            <h4 class="fw-bold">{{ overdueTasks.length }}</h4>
                             <small class="text-muted">need attention</small>
                         </div>
                         <div class="icon bg-light rounded p-3">
@@ -83,16 +67,10 @@
                     </div>
                 </div>
             </div>
-
         </div>
-
-        <!-- Main content -->
         <div class="row g-3">
-
-            <!-- Left: Project Overview -->
             <div class="col-md-8">
                 <div class="card p-3 shadow-sm border-0">
-
                     <div class="d-flex justify-content-between align-items-center">
                         <h5 class="fw-semibold m-0"><b>Project Overview</b></h5>
                         <a href="#" class="text-decoration-none fw-semibold">View all →</a>
@@ -100,18 +78,31 @@
 
                     <hr>
 
-                    <div class="text-center py-5">
+                    <div v-if="workspaces.length === 0" class="text-center py-5">
                         <div class="p-5 d-inline-flex bg-light rounded-circle">
                             <i class="fa-solid fa-folder-plus fa-4x"></i>
                         </div>
                         <p class="text-muted">No projects yet</p>
-                        <button class="btn btn-primary">Create your First Project</button>
+                        <button class="btn btn-primary" @click="showCreateModal" data-toggle="modal" data-target="#newProjectModal">Create your First Project</button>
                     </div>
 
+                    <div v-else class="workspace-list">
+                        <div v-for="workspace in workspaces" :key="workspace.id" class="workspace-item p-3 border-bottom">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="fw-bold mb-1">{{ workspace.name }}</h6>
+                                    <p class="text-muted small mb-0">{{ workspace.description }}</p>
+                                </div>
+                                <div>
+                                    <button class="btn btn-sm btn-outline-secondary" @click="showEditModal(workspace)" data-toggle="modal" data-target="#newProjectModal">Edit</button>
+                                    <button class="btn btn-sm btn-outline-danger" @click="removeWorkspace(workspace.id)">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Right: My Tasks -->
             <div class="col-md-4">
                 <div class="card p-3 shadow-sm border-0 mb-3">
                     <div class="d-flex justify-content-between align-items-center">
@@ -119,124 +110,211 @@
                             <i class="bi bi-person fs-4 mr-2"></i>
                             <h6 class="m-0 fw-semibold">My Tasks</h6>
                         </div>
-                        <span class="badge bg-success">0</span>
+                        <span class="badge bg-success">{{ myTasks.length }}</span>
                     </div>
                     <hr>
-                    <p class="text-muted text-center">No my tasks</p>
+                    <div v-if="myTasks.length === 0" class="text-muted text-center">
+                        <p>No my tasks</p>
+                    </div>
+                    <div v-else>
+                        <div v-for="task in myTasks" :key="task.id" class="mb-2 p-2 border-bottom">
+                            <p class="mb-0 small">{{ task.title }}</p>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Overdue small -->
                 <div class="card p-3 shadow-sm border-0 mb-3">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="d-flex align-items-center">
                             <i class="bi bi-exclamation-triangle fs-4 mr-2"></i>
                             <h6 class="m-0 fw-semibold">Overdue</h6>
                         </div>
-                        <span class="badge bg-warning">0</span>
+                        <span class="badge bg-warning">{{ overdueTasks.length }}</span>
                     </div>
                     <hr>
-                    <p class="text-muted text-center">No overdue</p>
+                    <div v-if="overdueTasks.length === 0" class="text-muted text-center">
+                        <p>No overdue</p>
+                    </div>
+                    <div v-else>
+                        <div v-for="task in overdueTasks" :key="task.id" class="mb-2 p-2 border-bottom">
+                            <p class="mb-0 small">{{ task.title }}</p>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- In progress -->
                 <div class="card p-3 shadow-sm border-0">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="d-flex align-items-center">
                             <i class="fa-regular fa-clock mr-2"></i>
                             <h6 class="m-0 fw-semibold">In progress</h6>
                         </div>
-                        <span class="badge bg-danger">0</span>
+                        <span class="badge bg-danger">{{ inProgressTasks.length }}</span>
                     </div>
                     <hr>
-                    <p class="text-muted text-center">No in progress</p>
+                    <div v-if="inProgressTasks.length === 0" class="text-muted text-center">
+                        <p>No in progress</p>
+                    </div>
+                    <div v-else>
+                        <div v-for="task in inProgressTasks" :key="task.id" class="mb-2 p-2 border-bottom">
+                            <p class="mb-0 small">{{ task.title }}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
 
+        <div class="modal fade" id="newProjectModal" tabindex="-1" aria-labelledby="newProjectModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="newProjectModalLabel">
+                            <b>{{ isEditing ? 'Edit Project' : 'New Project' }}</b>
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <form id="projectForm" @submit.prevent="saveWorkspace">
+                            <div class="form-group">
+                                <label><strong>Project Name</strong></label>
+                                <input 
+                                    v-model="formData.name"
+                                    type="text" 
+                                    class="form-control"
+                                    placeholder="Nhập tên dự án, ví dụ: Hệ thống quản lý dự án Scrum"
+                                    required>
+                            </div>
+
+                            <div class="form-group">
+                                <label><strong>Description</strong></label>
+                                <textarea 
+                                    v-model="formData.description"
+                                    class="form-control" 
+                                    rows="3"
+                                    placeholder="Mô tả chi tiết về dự án...  "></textarea>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button 
+                            type="button" 
+                            class="btn btn-primary"
+                            @click="saveWorkspace"
+                            :disabled="loading">
+                            {{ loading ? 'Loading...' : (isEditing ? 'Update Project' : 'Create Project') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <!-- New Project Modal -->
-<div class="modal fade" id="newProjectModal" tabindex="-1" aria-labelledby="newProjectModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h5 class="modal-title" id="newProjectModalLabel">
-                   <b>New Project</b>
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-
-            <!-- Modal Body -->
-            <div class="modal-body">
-
-                <form id="projectForm">
-
-                    <!-- Project Name -->
-                    <div class="form-group">
-                        <label><strong>Project Name</strong></label>
-                        <input type="text" class="form-control" placeholder="Nhập tên dự án, ví dụ: Hệ thống quản lý dự án Scrum">
-                    </div>
-
-                    <!-- Description -->
-                    <div class="form-group">
-                        <label><strong>Description</strong></label>
-                        <textarea class="form-control" rows="3" placeholder="Mô tả chi tiết về dự án..."></textarea>
-                    </div>
-
-                    <!-- Row: Date -->
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label><strong>Start Date</strong></label>
-                            <input type="date" class="form-control">
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label><strong>End Date</strong></label>
-                            <input type="date" class="form-control">
-                        </div>
-                    </div>
-
-                    <!-- Row: Priority & Status -->
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label><strong>Priority</strong></label>
-                            <select class="form-control">
-                                <option value="low">Low</option>
-                                <option value="medium" selected>Medium</option>
-                                <option value="high">High</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group col-md-6">
-                            <label><strong>Status</strong></label>
-                            <select class="form-control">
-                                <option value="not-started">Not Started</option>
-                                <option value="in-progress" selected>In Progress</option>
-                                <option value="completed">Completed</option>
-                            </select>
-                        </div>
-                    </div>
-                </form>
-
-            </div>
-
-            <!-- Modal Footer -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary">Create Project</button>
-            </div>
-
-        </div>
-    </div>
-</div>
-
 </template>
-<script>
-export default {
 
-}
+<script>
+import axios from 'axios';
+
+export default {
+    data() {
+        return {
+            workspaces: [],
+            myTasks: [],
+            overdueTasks: [],
+            inProgressTasks: [],
+            completedProjects: 0,
+            isEditing: false,
+            formData: {
+                id: null,
+                name: '',
+                description: ''
+            },
+            loading: false
+        };
+    },
+    mounted() {
+        this.loadWorkspaces();
+    },
+    methods: {
+        loadWorkspaces() {
+            axios.get('http://127.0.0.1:8000/api/workspace/get-data', {
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('token_client')
+                }
+            })
+            .then((res) => {
+                if (res.data.status) {
+                    this.workspaces = res.data.data;
+                } else {
+                    this.$toast.error(res.data.message);
+                }
+            })
+            .catch(() => {
+                this.$toast.error('Lỗi khi tải dữ liệu');
+            });
+        },
+        showCreateModal() {
+            this.isEditing = false;
+            this.formData = { id: null, name: '', description: '' };
+        },
+        showEditModal(workspace) {
+            this.isEditing = true;
+            this.formData = { ...workspace };
+        },
+        removeWorkspace(id) {
+            if (confirm('Bạn có chắc muốn xóa dự án này?')) {
+                axios.post('http://127.0.0.1:8000/api/workspace/delete', { id }, {
+                    headers: {
+                        Authorization: 'Bearer ' + localStorage.getItem('token_client')
+                    }
+                })
+                .then((res) => {
+                    if (res.data.status) {
+                        this.$toast.success(res.data.message);
+                        this.loadWorkspaces();
+                    } else {
+                        this.$toast.error(res.data.message);
+                    }
+                })
+                .catch(() => {
+                    this.$toast.error('Lỗi khi xóa dự án');
+                });
+            }
+        },
+        saveWorkspace() {
+            this.loading = true;
+            const url = this.isEditing 
+                ? 'http://127.0.0.1:8000/api/workspace/update' 
+                : 'http://127.0.0.1:8000/api/workspace/add-data';
+            const method = this.isEditing ? 'put' : 'post';
+
+            axios[method](url, this.formData, {
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('token_client')
+                }
+            })
+            .then((res) => {
+                if (res.data.status) {
+                    this.$toast.success(res.data.message);
+                    this.loadWorkspaces();
+                    this.$nextTick(() => {
+                        $('#workspaceModal').modal('hide');
+                    });
+                } else {
+                    this.$toast.error(res.data.message);
+                }
+            })
+            .catch(() => {
+                this.$toast.error('Lỗi khi lưu dự án');
+            })
+            .finally(() => {
+                this.loading = false;
+            });
+        }
+    }
+};
 </script>
 <style>
 .text-purple {
@@ -249,4 +327,11 @@ export default {
     justify-content: center;
 }
 
+.workspace-item {
+    transition: background-color 0.2s;
+}
+
+.workspace-item:hover {
+    background-color: #f8f9fa;
+}
 </style>

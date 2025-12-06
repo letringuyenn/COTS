@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Workspace extends Model
 {
     protected $table = 'workspaces';
-
-    // Các cột cho phép gán dữ liệu hàng loạt
     protected $fillable = [
         'name',
         'description',
