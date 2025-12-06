@@ -15,7 +15,8 @@ class UsersSeeder extends Seeder
             [
                 'name' => 'Administrator',
                 'email' => 'admin@example.com',
-                'password' => Hash::make('password'), // Mã hoá mật khẩu
+                // store hashed password
+                'password' => Hash::make('123456'),
                 'system_role_id' => 1, // admin
                 'status_id' => 1, // active
                 'email_verified_at' => now(),
@@ -25,7 +26,7 @@ class UsersSeeder extends Seeder
             [
                 'name' => 'Member User',
                 'email' => 'member@example.com',
-                'password' => Hash::make('password'),
+                'password' => Hash::make('123456'),
                 'system_role_id' => 2, // member
                 'status_id' => 2, // pending
                 'email_verified_at' => null,
