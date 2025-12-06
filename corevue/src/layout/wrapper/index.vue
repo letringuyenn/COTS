@@ -1,17 +1,19 @@
 <template>
-  <div id="loading">
-    <div id="loading-center"></div>
-  </div>
-  <div class="wrapper">
-    <Menu></Menu>
-    <Top></Top>
-    <div id="content-page" class="content-page">
-      <div class="container-fluid">
-        <router-view></router-view>
+  <div>
+    <div id="loading">
+      <div id="loading-center"></div>
+    </div>
+    <div class="wrapper">
+      <Menu></Menu>
+      <Top></Top>
+      <div id="content-page" class="content-page">
+        <div class="container-fluid">
+          <router-view></router-view>
+        </div>
       </div>
     </div>
+    <Bot></Bot>
   </div>
-  <Bot></Bot>
 </template>
 <script>
 import Top from "../components/Top.vue";

@@ -13,7 +13,7 @@ class User extends Authenticatable
 
     protected $table = 'users';
 
-    protected $fillable = [
+     protected $fillable = [
         'name',
         'email',
         'password',
@@ -22,4 +22,18 @@ class User extends Authenticatable
         'email_verified_at',
     ];
 
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    public function systemRole()
+    {
+        return $this->belongsTo(SystemRole::class, 'system_role_id');
+    }
+
+    public function status()
+    {
+        return $this->belongsTo(UserStatus::class, 'status_id');
+    }
 }

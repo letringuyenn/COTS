@@ -1,12 +1,14 @@
 <template>
-    <div id="loading">
-        <div id="loading-center">
+    <div>
+        <div id="loading">
+            <div id="loading-center">
+            </div>
         </div>
-    </div>
-    <div class="wrapper">
-        <div id="content-page" class="content-page">
-            <div class="container-fluid">
-                <router-view></router-view>
+        <div class="wrapper">
+            <div id="content-page" class="content-page">
+                <div class="container-fluid">
+                    <router-view></router-view>
+                </div>
             </div>
         </div>
     </div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid vh-100 d-flex flex-column bg-light">
+  <div class="container-fluid vh-100 d-flex flex-column bg-light" @click="closeDropdown">
 
     <!-- Nội dung chính -->
     <div class="row flex-grow-1 p-3">
@@ -14,7 +14,7 @@
 
           <div class="card-body d-flex flex-column">
             <div class="input-group mb-3">
-              <input v-model="newTask" type="text" class="form-control" placeholder="Nhập việc cần làm...">
+              <input v-model="newTask" type="text" class="form-control" placeholder="Nhập việc cần làm... ">
               <button class="btn btn-success" @click="addTask">Thêm</button>
             </div>
 
@@ -23,8 +23,8 @@
                 <div class="task-item d-flex justify-content-between align-items-center shadow-sm">
                   <span>{{ element.text }}</span>
 
-                  <div class="dropdown">
-                    <button class="btn btn-sm btn-light border" type="button" @click="toggleDropdown(element.id)">
+                  <div class="dropdown" @click.stop>
+                    <button class="btn btn-sm btn-light border" type="button" @click.stop="toggleDropdown(element. id)">
                       ⋮
                     </button>
 
@@ -66,8 +66,8 @@
                     <template #item="{ element }">
                       <div class="task-item shadow-sm">
                         <span>{{ element.text }}</span>
-                        <div class="dropdown">
-                          <button class="btn btn-sm btn-light border" @click="toggleDropdown(element.id)">⋮</button>
+                        <div class="dropdown" @click.stop>
+                          <button class="btn btn-sm btn-light border" @click.stop="toggleDropdown(element. id)">⋮</button>
 
                           <div v-if="dropdownOpen === element.id" class="dropdown-menu show custom-dropdown">
                             <button class="dropdown-item" @click="assignTask(element)">Giao</button>
@@ -94,10 +94,10 @@
                     <template #item="{ element }">
                       <div class="task-item shadow-sm">
                         <span>{{ element.text }}</span>
-                        <div class="dropdown">
-                          <button class="btn btn-sm btn-light border" @click="toggleDropdown(element.id)">⋮</button>
+                        <div class="dropdown" @click.stop>
+                          <button class="btn btn-sm btn-light border" @click.stop="toggleDropdown(element. id)">⋮</button>
 
-                          <div v-if="dropdownOpen === element.id" class="dropdown-menu show custom-dropdown">
+                          <div v-if="dropdownOpen === element. id" class="dropdown-menu show custom-dropdown">
                             <button class="dropdown-item" @click="assignTask(element)">Giao</button>
                             <button class="dropdown-item" @click="setTime(element)">Thời gian</button>
                             <button class="dropdown-item text-danger" @click="deleteTask(element)">Xóa</button>
@@ -122,10 +122,10 @@
                     <template #item="{ element }">
                       <div class="task-item shadow-sm">
                         <span>{{ element.text }}</span>
-                        <div class="dropdown">
-                          <button class="btn btn-sm btn-light border" @click="toggleDropdown(element.id)">⋮</button>
+                        <div class="dropdown" @click.stop>
+                          <button class="btn btn-sm btn-light border" @click.stop="toggleDropdown(element. id)">⋮</button>
 
-                          <div v-if="dropdownOpen === element.id" class="dropdown-menu show custom-dropdown">
+                          <div v-if="dropdownOpen === element. id" class="dropdown-menu show custom-dropdown">
                             <button class="dropdown-item" @click="assignTask(element)">Giao</button>
                             <button class="dropdown-item" @click="setTime(element)">Thời gian</button>
                             <button class="dropdown-item text-danger" @click="deleteTask(element)">Xóa</button>
@@ -146,18 +146,16 @@
 
     <!-- NÚT ĐIỀU KHIỂN -->
     <div class="text-center pb-3">
-      <button class="btn btn-warning px-4 me-2 toggle-btn mr-2 text-light" @click="showTodo = !showTodo">
+      <button class="btn btn-warning px-4 me-2 toggle-btn mr-2 text-light" @click.stop="showTodo = !showTodo">
         To-Do List
       </button>
-      <button class="btn btn-primary px-4 toggle-btn" @click="showBoard = !showBoard">
+      <button class="btn btn-primary px-4 toggle-btn" @click.stop="showBoard = !showBoard">
         Board
       </button>
     </div>
 
   </div>
 </template>
-
-
 
 <script>
 import draggable from 'vuedraggable';
@@ -199,7 +197,7 @@ export default {
       }
     },
     addBacklog() {
-      if (this.newBacklog.trim()) {
+      if (this. newBacklog.trim()) {
         this.backlog.push({ id: Date.now(), text: this.newBacklog });
         this.newBacklog = '';
       }
@@ -212,27 +210,30 @@ export default {
     },
     addDone() {
       if (this.newDone.trim()) {
-        this.done.push({ id: Date.now(), text: this.newDone });
+        this.done. push({ id: Date.now(), text: this.newDone });
         this.newDone = '';
       }
     },
     assignTask(item) {
       alert(`Assign task: ${item.text}`);
-      this.dropdownOpen = null;
+      this.closeDropdown();
     },
     setTime(item) {
       alert(`Set time for: ${item.text}`);
-      this.dropdownOpen = null;
+      this.closeDropdown();
     },
     deleteTask(item) {
       this.todoTasks = this.todoTasks.filter(t => t.id !== item.id);
       this.backlog = this.backlog.filter(t => t.id !== item.id);
       this.doing = this.doing.filter(t => t.id !== item.id);
       this.done = this.done.filter(t => t.id !== item.id);
-      this.dropdownOpen = null;
+      this.closeDropdown();
     },
     toggleDropdown(id) {
       this.dropdownOpen = this.dropdownOpen === id ? null : id;
+    },
+    closeDropdown() {
+      this.dropdownOpen = null;
     },
   },
 };
@@ -272,11 +273,6 @@ export default {
   cursor: grab;
 }
 
-.task-item:hover {
-  background: #f8f9fa;
-  transform: scale(1.02);
-}
-
 .custom-dropdown {
   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
   border-radius: 8px;
@@ -286,6 +282,4 @@ export default {
   border-radius: 12px;
   font-weight: bold;
 }
-
 </style>
-
