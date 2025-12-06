@@ -221,6 +221,8 @@
 </template>
 
 <script>
+import membersApi from '../../../api/members';
+
 export default {
   name: "TeamManagement",
   data() {
@@ -256,16 +258,9 @@ export default {
     async fetchMembers() {
       this.isLoading = true;
       try {
-        const response = await api.getMembers();
-        // Hỗ trợ cả 2 kiểu response: mảng trực tiếp hoặc { data: [...] }
-        const body = response && response.data ? response.data : null;
-        if (Array.isArray(body)) {
-          this.members = body;
-        } else if (body && Array.isArray(body.data)) {
-          this.members = body.data;
-        } else {
-          this.members = [];
-        }
+        const response = await membersApi.getMembers();
+        // membersApi returns an array of members
+        this.members = Array.isArray(response) ? response : [];
       } catch (error) {
         console.error("Error fetching members:", error);
         // Fallback data nếu API lỗi (để demo UI không bị trắng)
@@ -287,23 +282,14 @@ export default {
       try {
         const payload = { ...this.newMember };
         // Gọi API thêm thành viên
-        const response = await api.addMember(payload);
-
-        // Cập nhật danh sách (thêm vào đầu hoặc reload)
-        // Hỗ trợ backend trả về item trực tiếp hoặc { data: item }
-        let createdMember = null;
-        if (response && response.data) {
-          if (Array.isArray(response.data)) {
-            // unlikely, but if backend returned array, pick last item
-            createdMember = response.data[response.data.length - 1];
-          } else if (response.data && response.data.id) {
-            createdMember = response.data;
-          } else if (response.data && response.data.data) {
-            createdMember = response.data.data;
-          }
+        const created = await membersApi.addMember(payload);
+        // API returns the created member
+        if (created && created.id) {
+          this.members.push(created);
+        } else {
+          // fallback
+          this.members.push({ ...payload, id: Date.now() });
         }
-        if (!createdMember) createdMember = { ...payload, id: Date.now() };
-        this.members.push(createdMember);
 
         this.closeModal();
       } catch (error) {
@@ -318,7 +304,7 @@ export default {
       if (!confirm("Are you sure you want to remove this member?")) return;
 
       try {
-        await api.deleteMember(id);
+        await membersApi.deleteMember(id);
         this.members = this.members.filter((m) => m.id !== id);
       } catch (error) {
         console.error("Error deleting member:", error);

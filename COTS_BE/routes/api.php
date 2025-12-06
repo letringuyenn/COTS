@@ -1,5 +1,6 @@
 <?php
 
+
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\WorkspaceController;
 use Illuminate\Http\Request;
