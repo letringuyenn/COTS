@@ -1,4 +1,10 @@
 <?php
 
-// Legacy filename kept for historical reasons. The real model class is
-// defined in `app/Models/User.php` to comply with PSR-4 autoloading.
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class users extends Model
+{
+    //
+}
