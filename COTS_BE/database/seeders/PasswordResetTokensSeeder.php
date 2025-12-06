@@ -5,32 +5,32 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
-class WorkspacesSeeder extends Seeder
+class PasswordResetTokensSeeder extends Seeder
 {
     public function run(): void
     {
-        $workspaces = [
+        $tokens = [
             [
-                'name' => 'Default Workspace',
-                'description' => 'Workspace mặc định được tạo sẵn cho admin',
-                'created_by' => 1, // Giả sử user có id = 1 là admin
+                'email' => 'admin@example.com',
+                'token' => Str::random(60),
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'name' => 'Development Team',
-                'description' => 'Workspace dành cho nhóm phát triển',
-                'created_by' => 1,
+                'email' => 'member@example.com',
+                'token' => Str::random(60),
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
         ];
 
         // Xóa dữ liệu cũ trước khi thêm mới
-        DB::table('workspaces')->delete();
+        DB::table('password_reset_tokens')->truncate();
+        DB::table('password_reset_tokens')->delete();
 
         // Thêm dữ liệu mới
-        DB::table('workspaces')->insert($workspaces);
+        DB::table('password_reset_tokens')->insert($tokens);
     }
 }
