@@ -15,6 +15,6 @@ Route::post('/khach-hang/dang-nhap', [ClientController::class, 'login']);
 Route::prefix('workspace')->group(function () {
     Route::get('/get-data', [WorkspaceController::class, 'getData']);
     Route::post('/add-data', [WorkspaceController::class, 'addData']);
-    Route::post('/update', [WorkspaceController::class, 'update']);
+    Route::put('/update', [WorkspaceController::class, 'update']);
     Route::post('/delete', [WorkspaceController::class, 'destroy']);
 });

@@ -3,21 +3,21 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h2 class="fw-bold">Welcome back, Viet Nguyen Quoc</h2>
-                <p class="text-muted">Here's what's happening with your projects today</p>
+                <p class="text-muted">Here's what's happening with your workspaces today</p>
             </div>
 
-            <button class="btn btn-primary btn-lg" @click="showCreateModal" data-toggle="modal" data-target="#newProjectModal">
-                <i class="bi bi-plus-lg"></i> New Project
+            <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#newProjectModal">
+                <i class="bi bi-plus-lg"></i> New Workspace
             </button>
         </div>
         <div class="row g-3 mb-4">
             <div class="col-md-3">
-                <div class="card p-3 shadow-sm border-0">
-                    <span class="fw-semibold d-block">Total Projects</span>
+                <div class="card p-3 shadow-sm border-0 h-100">
+                    <span class="fw-semibold d-block">Total Workspaces</span>
                     <div class="d-flex justify-content-between">
                         <div>
                             <h4 class="fw-bold">{{ workspaces.length }}</h4>
-                            <small class="text-muted">projects in Viet Nguyen Quoc</small>
+                            <small class="text-muted">Workspace in {{ username }}</small>
                         </div>
                         <div class="icon bg-light rounded p-3">
                             <i class="bi bi-folder fs-3 text-primary fa-xl"></i>
@@ -26,11 +26,11 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card p-3 shadow-sm border-0">
-                    <span class="fw-semibold d-block">Completed Projects</span>
+                <div class="card p-3 shadow-sm border-0 h-100">
+                    <span class="fw-semibold d-block">Completed Workspaces</span>
                     <div class="d-flex justify-content-between">
                         <div>
-                            <h4 class="fw-bold">{{ completedProjects }}</h4>
+                            <h4 class="fw-bold">{{ completedWorkspaces }}</h4>
                             <small class="text-muted">of {{ workspaces.length }} total</small>
                         </div>
                         <div class="icon bg-light rounded p-3">
@@ -40,11 +40,11 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card p-3 shadow-sm border-0">
+                <div class="card p-3 shadow-sm border-0 h-100">
                     <span class="fw-semibold d-block">My Tasks</span>
                     <div class="d-flex justify-content-between">
                         <div>
-                            <h4 class="fw-bold">{{ myTasks. length }}</h4>
+                            <h4 class="fw-bold">{{ myTasks.length }}</h4>
                             <small class="text-muted">assigned to me</small>
                         </div>
                         <div class="icon bg-light rounded p-3">
@@ -54,7 +54,7 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card p-3 shadow-sm border-0">
+                <div class="card p-3 shadow-sm border-0 h-100">
                     <span class="fw-semibold d-block">Overdue</span>
                     <div class="d-flex justify-content-between">
                         <div>
@@ -72,7 +72,7 @@
             <div class="col-md-8">
                 <div class="card p-3 shadow-sm border-0">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="fw-semibold m-0"><b>Project Overview</b></h5>
+                        <h5 class="fw-semibold m-0"><b>Workspace Overview</b></h5>
                         <a href="#" class="text-decoration-none fw-semibold">View all →</a>
                     </div>
 
@@ -82,20 +82,24 @@
                         <div class="p-5 d-inline-flex bg-light rounded-circle">
                             <i class="fa-solid fa-folder-plus fa-4x"></i>
                         </div>
-                        <p class="text-muted">No projects yet</p>
-                        <button class="btn btn-primary" @click="showCreateModal" data-toggle="modal" data-target="#newProjectModal">Create your First Project</button>
+                        <p class="text-muted">No Workspace yet</p>
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#newProjectModal">Create your
+                            First Workspace</button>
                     </div>
 
                     <div v-else class="workspace-list">
-                        <div v-for="workspace in workspaces" :key="workspace.id" class="workspace-item p-3 border-bottom">
+                        <div v-for="workspace in workspaces" :key="workspace.id"
+                            class="workspace-item p-3 border-bottom">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
                                     <h6 class="fw-bold mb-1">{{ workspace.name }}</h6>
                                     <p class="text-muted small mb-0">{{ workspace.description }}</p>
                                 </div>
                                 <div>
-                                    <button class="btn btn-sm btn-outline-secondary" @click="showEditModal(workspace)" data-toggle="modal" data-target="#newProjectModal">Edit</button>
-                                    <button class="btn btn-sm btn-outline-danger" @click="removeWorkspace(workspace.id)">Delete</button>
+                                    <button class="btn btn-sm btn-outline-secondary" @click="showEditModal(workspace)"
+                                        data-toggle="modal" data-target="#newProjectModal">Edit</button>
+                                    <button class="btn btn-sm btn-outline-danger"
+                                        @click="removeWorkspace(workspace.id)">Delete</button>
                                 </div>
                             </div>
                         </div>
@@ -163,12 +167,13 @@
             </div>
         </div>
 
-        <div class="modal fade" id="newProjectModal" tabindex="-1" aria-labelledby="newProjectModalLabel" aria-hidden="true">
+        <div class="modal fade" id="newProjectModal" tabindex="-1" aria-labelledby="newProjectModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="newProjectModalLabel">
-                            <b>{{ isEditing ? 'Edit Project' : 'New Project' }}</b>
+                            <b>{{ isEditing ? 'Edit Workspace' : 'New Workspace' }}</b>
                         </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -178,21 +183,14 @@
                     <div class="modal-body">
                         <form id="projectForm" @submit.prevent="saveWorkspace">
                             <div class="form-group">
-                                <label><strong>Project Name</strong></label>
-                                <input 
-                                    v-model="formData.name"
-                                    type="text" 
-                                    class="form-control"
-                                    placeholder="Nhập tên dự án, ví dụ: Hệ thống quản lý dự án Scrum"
-                                    required>
+                                <label><strong>Workspace Name</strong></label>
+                                <input v-model="formData.name" type="text" class="form-control"
+                                    placeholder="Nhập tên dự án, ví dụ: Hệ thống quản lý dự án Scrum" required>
                             </div>
 
                             <div class="form-group">
                                 <label><strong>Description</strong></label>
-                                <textarea 
-                                    v-model="formData.description"
-                                    class="form-control" 
-                                    rows="3"
+                                <textarea v-model="formData.description" class="form-control" rows="3"
                                     placeholder="Mô tả chi tiết về dự án...  "></textarea>
                             </div>
                         </form>
@@ -200,12 +198,8 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button 
-                            type="button" 
-                            class="btn btn-primary"
-                            @click="saveWorkspace"
-                            :disabled="loading">
-                            {{ loading ? 'Loading...' : (isEditing ? 'Update Project' : 'Create Project') }}
+                        <button type="button" class="btn btn-primary" @click="saveWorkspace" :disabled="loading">
+                            {{ loading ? 'Loading...' : (isEditing ? 'Update Workspace' : 'Create Workspace') }}
                         </button>
                     </div>
                 </div>
@@ -220,11 +214,14 @@ import axios from 'axios';
 export default {
     data() {
         return {
+            username: '',
+            email: '',
             workspaces: [],
             myTasks: [],
             overdueTasks: [],
             inProgressTasks: [],
-            completedProjects: 0,
+            completedWorkspaces: 0,
+            totalTasks: 0,
             isEditing: false,
             formData: {
                 id: null,
@@ -244,21 +241,25 @@ export default {
                     Authorization: 'Bearer ' + localStorage.getItem('token_client')
                 }
             })
-            .then((res) => {
-                if (res.data.status) {
-                    this.workspaces = res.data.data;
-                } else {
-                    this.$toast.error(res.data.message);
-                }
-            })
-            .catch(() => {
-                this.$toast.error('Lỗi khi tải dữ liệu');
-            });
+                .then((res) => {
+                    if (res.data.status) {
+                        // gán dữ liệu từ API
+                        this.workspaces = res.data.data;
+                        this.totalTasks = res.data.total_tasks;
+                        this.myTasks = res.data.my_tasks;
+                        this.overdueTasks = res.data.overdue_tasks;
+                        this.inProgressTasks = res.data.in_progress_tasks;
+                        this.completedWorkspaes = res.data.completed_wordkspaces;
+                        this.username = res.data.user.username;
+                    } else {
+                        this.$toast.error(res.data.message);
+                    }
+                })
+                .catch(() => {
+                    this.$toast.error('Lỗi khi tải dữ liệu');
+                });
         },
-        showCreateModal() {
-            this.isEditing = false;
-            this.formData = { id: null, name: '', description: '' };
-        },
+
         showEditModal(workspace) {
             this.isEditing = true;
             this.formData = { ...workspace };
@@ -270,23 +271,23 @@ export default {
                         Authorization: 'Bearer ' + localStorage.getItem('token_client')
                     }
                 })
-                .then((res) => {
-                    if (res.data.status) {
-                        this.$toast.success(res.data.message);
-                        this.loadWorkspaces();
-                    } else {
-                        this.$toast.error(res.data.message);
-                    }
-                })
-                .catch(() => {
-                    this.$toast.error('Lỗi khi xóa dự án');
-                });
+                    .then((res) => {
+                        if (res.data.status) {
+                            this.$toast.success(res.data.message);
+                            this.loadWorkspaces();
+                        } else {
+                            this.$toast.error(res.data.message);
+                        }
+                    })
+                    .catch(() => {
+                        this.$toast.error('Lỗi khi xóa dự án');
+                    });
             }
         },
         saveWorkspace() {
             this.loading = true;
-            const url = this.isEditing 
-                ? 'http://127.0.0.1:8000/api/workspace/update' 
+            const url = this.isEditing
+                ? 'http://127.0.0.1:8000/api/workspace/update'
                 : 'http://127.0.0.1:8000/api/workspace/add-data';
             const method = this.isEditing ? 'put' : 'post';
 
@@ -295,23 +296,23 @@ export default {
                     Authorization: 'Bearer ' + localStorage.getItem('token_client')
                 }
             })
-            .then((res) => {
-                if (res.data.status) {
-                    this.$toast.success(res.data.message);
-                    this.loadWorkspaces();
-                    this.$nextTick(() => {
-                        $('#workspaceModal').modal('hide');
-                    });
-                } else {
-                    this.$toast.error(res.data.message);
-                }
-            })
-            .catch(() => {
-                this.$toast.error('Lỗi khi lưu dự án');
-            })
-            .finally(() => {
-                this.loading = false;
-            });
+                .then((res) => {
+                    if (method == 'post') {
+                        this.$router.push("/teamanager").then(() => location.reload());
+                    }
+                    if (res.data.status) {
+                        this.$toast.success(res.data.message);
+                        this.loadWorkspaces();
+                    } else {
+                        this.$toast.error(res.data.message);
+                    }
+                })
+                .catch(() => {
+                    this.$toast.error('Lỗi khi lưu dự án');
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         }
     }
 };

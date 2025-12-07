@@ -2,160 +2,163 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Task;
 use App\Models\Workspace;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class WorkspaceController extends Controller
 {
-    // Lấy danh sách workspace của user hiện tại
     public function getData()
     {
         $user = Auth::guard('sanctum')->user();
-
         if (!$user) {
             return response()->json([
-                'status' => 0,
+                'status'  => 0,
                 'message' => 'Bạn chưa đăng nhập'
             ], 401);
         }
 
-        $workspaces = Workspace::where('created_by', $user->id)->get();
+        $userInfo = [
+            'id'       => $user->id,
+            'username' => $user->name,
+            'email'    => $user->email,
+        ];
+
+        // Lấy danh sách workspace của user
+        $workspaces = Workspace::where('created_by', $user->id)->with('boards')->get();
+
+        // Tổng số task của user (qua các workspace/board)
+        $totalTasks = Task::whereHas('board.workspace', function ($q) use ($user) {
+            $q->where('created_by', $user->id);
+        })->count();
+
+        // Task của riêng user (do user tạo)
+        $myTasks = Task::where('created_by', $user->id)->get();
+
+        // Task quá hạn
+        $overdueTasks = Task::where('created_by', $user->id)
+            ->where('due_date', '<', now())
+            ->whereNull('completed_at')
+            ->get();
+
+        // Task đang làm (ví dụ status_id = 2 là "in progress")
+        $inProgressTasks = Task::where('created_by', $user->id)
+            ->whereHas('status', function ($q) {
+                $q->where('name', 'In Progress');
+            })
+            ->get();
+
+        // Task đã hoàn thành
+        $completedWorkspaces = Task::where('created_by', $user->id)
+            ->whereNotNull('completed_at')
+            ->count();
 
         return response()->json([
-            'status' => 1,
-            'data' => $workspaces,
-            'message' => 'Lấy dữ liệu thành công'
+            'status'            => 1,
+            'user'              => $userInfo,
+            'data'              => $workspaces,
+            'total_tasks'       => $totalTasks,
+            'my_tasks'          => $myTasks,
+            'overdue_tasks'     => $overdueTasks,
+            'in_progress_tasks' => $inProgressTasks,
+            'completed_wordkspaces' => $completedWorkspaces,
+            'message'           => 'Lấy dữ liệu thành công'
         ]);
     }
 
-    // Tạo workspace mới
     public function addData(Request $request)
     {
         $user = Auth::guard('sanctum')->user();
-
         if (!$user) {
             return response()->json([
-                'status' => 0,
+                'status'  => 0,
                 'message' => 'Bạn chưa đăng nhập'
             ], 401);
         }
 
-        // Validate dữ liệu
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'name'        => 'required|string|max:255',
             'description' => 'nullable|string',
         ]);
 
-        try {
-            $workspace = Workspace::create([
-                'name' => $validated['name'],
-                'description' => $validated['description'] ?? '',
-                'created_by' => $user->id,
-            ]);
+        Workspace::create([
+            'name'        => $validated['name'],
+            'description' => $validated['description'] ?? '',
+            'created_by'  => $user->id,
+        ]);
 
-            return response()->json([
-                'status' => 1,
-                'data' => $workspace,
-                'message' => 'Tạo workspace thành công'
-            ], 201);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => 0,
-                'message' => 'Lỗi: ' . $e->getMessage()
-            ], 500);
-        }
+        return response()->json([
+            'status'  => true,
+            'message' => 'Tạo workspace thành công',
+        ]);
     }
 
-    // Cập nhật workspace
     public function update(Request $request)
     {
         $user = Auth::guard('sanctum')->user();
-
         if (!$user) {
             return response()->json([
-                'status' => 0,
+                'status'  => 0,
                 'message' => 'Bạn chưa đăng nhập'
             ], 401);
         }
 
-        $workspace = Workspace::find($request->id);
-
+        $workspace = Workspace::where('id', $request->id)->first();
         if (!$workspace) {
             return response()->json([
-                'status' => 0,
+                'status'  => 0,
                 'message' => 'Workspace không tồn tại'
             ], 404);
         }
 
-        // Kiểm tra quyền - chỉ người tạo mới được sửa
-        if ($workspace->created_by !== $user->id) {
+        if ($workspace->created_by != $user->id) {
             return response()->json([
-                'status' => 0,
+                'status'  => 0,
                 'message' => 'Bạn không có quyền sửa workspace này'
             ], 403);
         }
 
-        try {
-            $workspace->update([
-                'name' => $request->name ??  $workspace->name,
-                'description' => $request->description ??  $workspace->description,
-            ]);
+        Workspace::where('id', $request->id)->update([
+            'name'        => $request->name ?? $workspace->name,
+            'description' => $request->description ?? $workspace->description,
+        ]);
 
-            return response()->json([
-                'status' => 1,
-                'data' => $workspace,
-                'message' => 'Cập nhật workspace thành công'
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => 0,
-                'message' => 'Lỗi: ' . $e->getMessage()
-            ], 500);
-        }
+        return response()->json([
+            'status'  => true,
+            'message' => 'Cập nhật workspace thành công',
+        ]);
     }
 
-    // Xóa workspace
     public function destroy(Request $request)
     {
         $user = Auth::guard('sanctum')->user();
-
         if (!$user) {
             return response()->json([
-                'status' => 0,
+                'status'  => 0,
                 'message' => 'Bạn chưa đăng nhập'
             ], 401);
         }
 
-        $workspace = Workspace::find($request->id);
-
-        if (! $workspace) {
+        $workspace = Workspace::where('id', $request->id)->first();
+        if (!$workspace) {
             return response()->json([
-                'status' => 0,
+                'status'  => 0,
                 'message' => 'Workspace không tồn tại'
             ], 404);
         }
 
-        // Kiểm tra quyền - chỉ người tạo mới được xóa
-        if ($workspace->created_by !== $user->id) {
+        if ($workspace->created_by != $user->id) {
             return response()->json([
-                'status' => 0,
+                'status'  => 0,
                 'message' => 'Bạn không có quyền xóa workspace này'
             ], 403);
         }
 
-        try {
-            $workspace->delete();
-
-            return response()->json([
-                'status' => 1,
-                'message' => 'Xóa workspace thành công'
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => 0,
-                'message' => 'Lỗi: ' .  $e->getMessage()
-            ], 500);
-        }
+        Workspace::where('id', $request->id)->delete();
+        return response()->json([
+            'status'  => true,
+            'message' => 'Xóa workspace thành công',
+        ]);
     }
 }
