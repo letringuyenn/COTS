@@ -46,7 +46,7 @@
           </li>
 
           <li>
-            <router-link to="/team" class="iq-waves-effect">
+            <router-link to="/teamanager" class="iq-waves-effect">
               <i class="fa-solid fa-users"></i>
               <span>Team</span>
             </router-link>
