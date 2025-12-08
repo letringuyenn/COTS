@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\MemberController;
 use App\Http\Controllers\WorkspaceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -18,3 +19,13 @@ Route::prefix('workspace')->group(function () {
     Route::put('/update', [WorkspaceController::class, 'update']);
     Route::post('/delete', [WorkspaceController::class, 'destroy']);
 });
+
+Route::prefix('/member')->group(function () {
+    Route::get('/get-data', [MemberController::class, 'getData']);
+    Route::post('/add-data', [MemberController::class, 'addData']);
+    Route::post('/update', [MemberController::class, 'updateData']);
+    Route::post('/delete', [MemberController::class, 'destroyData']);
+    Route::post('/search', [MemberController::class, 'searchData']);
+});
+
+Route::get('/workspace-role/get-data', [MemberController::class, 'getDataWorkSpaceRole']);
